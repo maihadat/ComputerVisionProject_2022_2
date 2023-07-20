@@ -26,8 +26,9 @@ def update_nano_tiny(cfg, inp_params):
 opt = EasyDict()
 
 opt.exp_id = "coco_CSPDarknet-s_640x640"  # experiment name, you can change it to any other name
-opt.dataset_path = "/data/dataset/coco_dataset"  # COCO detection
+# opt.dataset_path = "/data/dataset/coco_dataset"  # COCO detection
 # opt.dataset_path = r"D:\work\public_dataset\coco2017"  # Windows system
+opt.dataset_path = '/content/yolox_COCO'
 opt.backbone = "CSPDarknet-s"  # CSPDarknet-nano, CSPDarknet-tiny, CSPDarknet-s, CSPDarknet-m, l, x
 opt.input_size = (640, 640)
 opt.random_size = (14, 26)  # None; multi-size train: from 448(14*32) to 832(26*32), set None to disable it
@@ -38,6 +39,7 @@ opt.master_batch_size = -1  # batch size in first gpu. -1 means: master_batch_si
 opt.num_epochs = 300
 
 # coco 80 classes
+'''
 opt.label_name = [
     'person', 'bicycle', 'car', 'motorcycle', 'airplane',
     'bus', 'train', 'truck', 'boat', 'traffic light', 'fire hydrant',
@@ -52,7 +54,8 @@ opt.label_name = [
     'laptop', 'mouse', 'remote', 'keyboard', 'cell phone', 'microwave',
     'oven', 'toaster', 'sink', 'refrigerator', 'book', 'clock', 'vase',
     'scissors', 'teddy bear', 'hair drier', 'toothbrush']
-
+'''
+opt.label_name = ['human']
 # TODO: support MOT(multi-object tracking) like FairMot/JDE when reid_dim > 0
 opt.reid_dim = 0  # 128  used in MOT, will add embedding branch if reid_dim>0
 # opt.label_name = ['pedestrian', 'people', 'bicycle', 'car', 'van', 'truck', 'tricycle', 'awning-tricycle', 'bus',

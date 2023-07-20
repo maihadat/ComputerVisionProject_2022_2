@@ -68,6 +68,8 @@ def detect():
     img_dir = opt.dataset_path + "/images/val2017" if "img_dir" not in opt else opt["img_dir"]
     output = "output"
     mkdir(output, rm=True)
+    output_label = "output/labels"
+    mkdir(output_label, rm=True)
 
     img_list = get_img_path(img_dir, extend=".jpg")
     assert len(img_list) != 0, "cannot find img in {}".format(img_dir)
@@ -76,13 +78,23 @@ def detect():
     for index, image_path in enumerate(tqdm.tqdm(img_list)):
         print("------------------------------")
         print("{}/{}, {}".format(index, len(img_list), image_path))
-
+        
         assert os.path.isfile(image_path), "cannot find {}".format(image_path)
         img = cv2.imread(image_path)
         s1 = time.time()
         results = detector.run(img, vis_thresh=opt.vis_thresh, show_time=True)
         print("[pre_process + inference + post_process] time cost: {}s".format(time.time() - s1))
-        print(results)
+        for item in results:
+            s = ""
+            conf = item[1]
+            xmin, ymin, xmax, ymax = item[2]
+            bbox_tmp = [(xmax+xmin)/2, (ymax+ymin)/2, xmax-xmin, ymax-ymin]
+            bbox = [str(i/1024) for i in bbox_tmp]
+            s += str(conf) + ' '
+            s += " ".join(bbox) + '\n'
+            with open(output_label + "/" + image_path.split("/")[-1][:-3]+'txt', 'a') as f:
+                f.write(s)
+        
         img = vis_result(img, results)
         save_p = output + "/" + image_path.split("/")[-2]
         mkdir(save_p)
